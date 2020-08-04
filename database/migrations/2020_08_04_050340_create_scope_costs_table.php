@@ -16,7 +16,7 @@ class CreateScopeCostsTable extends Migration
         Schema::create('milestones', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 100)->nullable()->default();
-            $table->date('due_date')->nullable()->default(new DateTime());
+            $table->date('due_date')->nullable();
             $table->string('deliverables', 255)->nullable()->default();
             $table->integer('status_id')->unsigned()->nullable()->default(0);
             $table->integer('project_id')->unsigned()->nullable()->default(0);
@@ -33,7 +33,7 @@ class CreateScopeCostsTable extends Migration
         Schema::create('milestone_costs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 100)->nullable()->default();
-            $table->text('description')->nullable()->default();
+            $table->text('description')->nullable();
             $table->double('price_per', 15, 2)->nullable()->default(0);
             $table->integer('quantity')->unsigned()->nullable()->default(0);
             $table->double('total_cost', 15, 2)->nullable()->default(0);
@@ -45,7 +45,7 @@ class CreateScopeCostsTable extends Migration
         Schema::create('milestone_hours', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 100)->nullable()->default();
-            $table->text('description')->nullable()->default();
+            $table->text('description')->nullable();
             $table->double('price_per', 15, 2)->nullable()->default(0);
             $table->integer('quantity')->unsigned()->nullable()->default(0);
             $table->double('total_cost', 15, 2)->nullable()->default(0);

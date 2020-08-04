@@ -16,7 +16,6 @@ class CreateScopeProjectTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('project_name');
-            $table->dateTime('created_at')->nullable()->default(new DateTime());
             $table->string('hourly_rate', 100)->nullable()->default('0');
             $table->string('budget', 100)->nullable()->default('0');
             $table->boolean('active')->nullable()->default(false);
@@ -46,7 +45,7 @@ class CreateScopeProjectTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('task_name');
-            $table->text('instructions')->nullable()->default();
+            $table->text('instructions')->nullable();
             $table->string('total_hours', 100)->nullable()->default('0');
             $table->integer('status_id')->unsigned()->nullable()->default(0);
             $table->integer('milestone_id')->unsigned()->nullable()->default(0);
