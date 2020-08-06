@@ -4,15 +4,19 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+window.Vue = require('vue');
 
 require('./bootstrap');
+require('./filters');
+require('./components/index');
 
-window.Vue = require('vue');
 import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform'
 
 import Gate from "./Gate";
 Vue.prototype.$gate = new Gate(window.user);
+
+import router from "./routes"
 
 import swal from 'sweetalert2'
 window.Swal = swal;
@@ -28,11 +32,8 @@ window.toast = toast;
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
-
 Vue.component('pagination', require('laravel-vue-pagination'));
 
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
 
 import VueProgressBar from 'vue-progressbar';
 Vue.use(VueProgressBar, {
@@ -41,65 +42,8 @@ Vue.use(VueProgressBar, {
     height: '3px'
 });
 
-let routes = [
-    { path: '/dashboard', component: require('./components/Dashboard.vue').default },
-    { path: '/developer', component: require('./components/Developer.vue').default },
-    { path: '/project', component: require('./components/Project.vue').default },
-    { path: '/customer', component: require('./components/Customer.vue').default },
-    { path: '/profile', component: require('./components/Profile.vue').default },
-    { path: '/users', component: require('./components/Users.vue').default },
-    // 404 not found page
-    { path: '*', component: require('./components/NotFound.vue').default }
-]
-
-const router = new VueRouter({
-    mode: 'history',
-    routes, // short for `routes: routes`
-    linkActiveClass: 'active'
-});
-
-Vue.filter('upText', function(text){
-    return text.charAt(0).toUpperCase() + text.slice(1);
-});
-
-Vue.filter('myDate', function(created){
-    return moment(created).format('MMMM Do YYYY');
-});
-
 window.Fire = new Vue();
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-
-Vue.component(
-    'passport-clients',
-    require('./components/passport/Clients.vue').default
-);
-
-Vue.component(
-    'passport-authorized-clients',
-    require('./components/passport/AuthorizedClients.vue').default
-);
-
-Vue.component(
-    'passport-personal-access-tokens',
-    require('./components/passport/PersonalAccessTokens.vue').default
-);
-
-Vue.component(
-    'not-found',
-    require('./components/NotFound.vue').default
-);
-
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
