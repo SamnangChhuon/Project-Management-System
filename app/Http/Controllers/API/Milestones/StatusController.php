@@ -15,7 +15,7 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        return Status::latest()->paginate(10);
     }
 
     /**
@@ -26,7 +26,13 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'status'  =>  'required|string|max:191|unique:milestone_status',
+        ]);
+
+        return Client::create([
+            'status'  =>  $request['status']
+        ]);
     }
 
     /**
@@ -37,7 +43,11 @@ class StatusController extends Controller
      */
     public function show(Status $status)
     {
-        //
+        $status = Status::findOrFail($status);
+
+        return response()->json([
+            'data' => $status
+        ]);
     }
 
     /**
@@ -49,7 +59,15 @@ class StatusController extends Controller
      */
     public function update(Request $request, Status $status)
     {
-        //
+        $status = Status::findOrFail($status);
+
+        $this->validate($request, [
+            'status'  =>  'required|string|max:191|unique:milestone_status',
+        ]);
+
+        $status->update($request->all());
+
+        return response()->json(['message' => __('messages.update_success')]);
     }
 
     /**
@@ -60,6 +78,10 @@ class StatusController extends Controller
      */
     public function destroy(Status $status)
     {
-        //
+        $status = Status::findOrFail($status);
+
+        // Delete the status
+        $status->withTrashed();
+        return ['message' => 'User Deleted'];
     }
 }
