@@ -124,7 +124,7 @@ class UserController extends Controller
 
         $user->update($request->all());
 
-        return ['message' => 'Updated the user info.'];
+        return ['message' => __('messages.update_success')];
     }
 
     /**

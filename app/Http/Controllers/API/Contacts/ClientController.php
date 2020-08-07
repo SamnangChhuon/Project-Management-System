@@ -15,7 +15,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        return Client::latest()->paginate(10);
     }
 
     /**
@@ -26,7 +26,27 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name'  =>  'required|string|max:191|unique:clients',
+            'phone' =>  'required|numeric|max:191|unique:clients',
+            'city' =>  'required|string|max:191'
+        ]);
+
+        return Client::create([
+            'name'  =>  $request['name'],
+            'website' =>  $request['website'],
+            'industry' =>  $request['industry'],
+            'revenue' =>  $request['revenue'],
+            'description' =>  $request['description'],
+            'phone' =>  $request['phone'],
+            'street1' =>  $request['street1'],
+            'street2' =>  $request['street2'],
+            'city' =>  $request['city'],
+            'state' =>  $request['state'],
+            'zip' =>  $request['zip'],
+            'country' =>  $request['country'],
+            'notes' =>  $request['notes']
+        ]);
     }
 
     /**
@@ -37,7 +57,11 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        //
+        $client = Client::findOrFail($client);
+
+        return response()->json([
+            'data' => $client
+            ]);
     }
 
     /**
@@ -49,7 +73,17 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+        $client = Client::findOrFail($client);
+
+        $this->validate($request, [
+            'name'  =>  'required|string|max:191|unique:clients',
+            'phone' =>  'required|numeric|max:191|unique:clients',
+            'city' =>  'required|string|max:191',
+        ]);
+
+        $client->update($request->all());
+
+        return response()->json(['message' => __('messages.update_success')]);
     }
 
     /**
@@ -60,6 +94,10 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $client = Client::findOrFail($client);
+
+        // Delete the client
+        $client->withTrashed();
+        return ['message' => 'User Deleted'];
     }
 }

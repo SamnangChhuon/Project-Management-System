@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueProgressBar from 'vue-progressbar';
 
 Vue.use(VueRouter)
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+});
 
 let routes = [
     {
@@ -73,6 +79,16 @@ const router = new VueRouter({
     mode: 'history',
     routes,  // short for `routes: routes`
     linkActiveClass: 'active'
+})
+
+router.beforeEach((to, from, next) => {
+    // this.$Progress.start();
+
+    next()
+});
+
+router.afterEach((to, from) => {
+    // this.$Progress.finish();
 })
 
 export default router
