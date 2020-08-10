@@ -23,20 +23,20 @@ Vue.component(
     require('./ui/Footer.vue').default
 );
 
-// Vue.component(
-//     'passport-clients',
-//     require('./passport/Clients.vue').default
-// );
+Vue.component(
+    'passport-clients',
+    require('./passport/Clients.vue').default
+);
 
-// Vue.component(
-//     'passport-authorized-clients',
-//     require('./passport/AuthorizedClients.vue').default
-// );
+Vue.component(
+    'passport-authorized-clients',
+    require('./passport/AuthorizedClients.vue').default
+);
 
-// Vue.component(
-//     'passport-personal-access-tokens',
-//     require('./passport/PersonalAccessTokens.vue').default
-// );
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./passport/PersonalAccessTokens.vue').default
+);
 
 Vue.component(
     'not-found',

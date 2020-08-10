@@ -10,7 +10,6 @@ require('./bootstrap');
 require('./filters');
 require('./components/index');
 
-import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform'
 
 import Gate from "./Gate";

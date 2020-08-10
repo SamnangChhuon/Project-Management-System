@@ -67,6 +67,11 @@ let routes = [
         name: 'SettingTaskStatus',
         component: require('./modules/settings/TaskStatus.vue').default
     },
+    {
+        path: '/passport-token',
+        name: 'SettingPassportToken',
+        component: require('./modules/settings/PassportToken.vue').default
+    },
     /** 404 not found page */
     {
         path: '*',

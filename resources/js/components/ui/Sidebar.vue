@@ -89,6 +89,12 @@
                                 <p>Task Status</p>
                             </router-link>
                         </li>
+                        <li class="nav-item">
+                            <router-link :to="{ name: 'SettingPassportToken' }" class="nav-link">
+                                <i class="fas fa-cog nav-icon"></i>
+                                <p>Passport Token</p>
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
                 <!-- @endcan -->

@@ -82,6 +82,6 @@ class StatusController extends Controller
 
         // Delete the status
         $status->withTrashed();
-        return ['message' => 'User Deleted'];
+        return ['message' => 'Data Deleted'];
     }
 }

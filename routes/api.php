@@ -18,6 +18,31 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::apiResources([ 'user' => 'API\UserController' ]);
+
+Route::group([
+    'prefix' => 'milestones',
+    'namespace' => 'API\Milestones',
+    'as' => 'milestones.'
+], function () {
+    Route::apiResources([ 'status' => 'StatusController' ]);
+});
+
+Route::group([
+    'prefix' => 'tasks',
+    'namespace' => 'API\Tasks',
+    'as' => 'tasks.'
+], function () {
+    Route::apiResources([ 'status' => 'StatusController' ]);
+});
+
+Route::group([
+    'prefix' => 'projects',
+    'namespace' => 'API\Projects',
+    'as' => 'projects.'
+], function () {
+    Route::apiResources([ 'status' => 'StatusController' ]);
+});
+
 Route::get('profile', 'API\UserController@profile');
 Route::get('findUser', 'API\UserController@search');
 Route::put('profile', 'API\UserController@updateProfile');
