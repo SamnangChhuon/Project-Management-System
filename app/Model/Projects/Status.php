@@ -9,6 +9,8 @@ class Status extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'project_statuses';
+
     /**
      * The attributes that are mass assignable.
      *

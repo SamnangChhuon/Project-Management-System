@@ -9,7 +9,7 @@ class Status extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'milestone_status';
+    protected $table = 'milestone_statuses';
     /**
      * The attributes that are mass assignable.
      *
@@ -25,4 +25,9 @@ class Status extends Model
      * @var array
      */
     protected $dates = ['deleted_at', 'created_at', 'updated_at'];
+
+    // public function milestones()
+    // {
+    //     return $this->belongsToMany('App\Model\Milestone', 'milestones', 'user_id', 'role_id');
+    // }
 }

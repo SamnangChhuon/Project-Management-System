@@ -21,12 +21,14 @@ class CreateScopeCostsTable extends Migration
             $table->integer('status_id')->unsigned()->nullable()->default(0);
             $table->integer('project_id')->unsigned()->nullable()->default(0);
             $table->string('total_hours', 100)->nullable()->default('0');
+            $table->softDeletes();
             $table->timestamps();
         });
 
         Schema::create('milestone_status', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('status', 100)->nullable()->default();
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -39,6 +41,7 @@ class CreateScopeCostsTable extends Migration
             $table->double('total_cost', 15, 2)->nullable()->default(0);
             $table->integer('project_id')->unsigned()->nullable()->default(0);
             $table->integer('milesone_id')->unsigned()->nullable()->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
 
@@ -51,6 +54,7 @@ class CreateScopeCostsTable extends Migration
             $table->double('total_cost', 15, 2)->nullable()->default(0);
             $table->integer('project_id')->unsigned()->nullable()->default(0);
             $table->integer('milesone_id')->unsigned()->nullable()->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
