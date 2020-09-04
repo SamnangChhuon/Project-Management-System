@@ -19,11 +19,4 @@ class Status extends Model
     protected $fillable = [
         'status'
     ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
 }

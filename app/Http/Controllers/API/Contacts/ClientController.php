@@ -28,8 +28,9 @@ class ClientController extends Controller
     {
         $this->validate($request, [
             'name'  =>  'required|string|max:191|unique:clients',
-            'phone' =>  'required|numeric|max:191|unique:clients',
-            'city' =>  'required|string|max:191'
+            'phone' =>  'required|string|max:191|unique:clients',
+            'website' =>  'required|string|max:191',
+            'industry' =>  'required|string|max:191',
         ]);
 
         return Client::create([
@@ -71,14 +72,15 @@ class ClientController extends Controller
      * @param  \App\Model\Contacts\Clients  $clients
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request, $id)
     {
-        $client = Client::findOrFail($client);
+        $client = Client::findOrFail($id);
 
         $this->validate($request, [
-            'name'  =>  'required|string|max:191|unique:clients',
-            'phone' =>  'required|numeric|max:191|unique:clients',
-            'city' =>  'required|string|max:191',
+            'name'  =>  'required|string|max:191|unique:clients,name,'.$client->id,
+            'phone' =>  'required|string|max:191|unique:clients,phone,'.$client->id,
+            'website' =>  'required|string|max:191',
+            'industry' =>  'required|string|max:191',
         ]);
 
         $client->update($request->all());

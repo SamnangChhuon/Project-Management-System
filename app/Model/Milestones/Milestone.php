@@ -24,12 +24,4 @@ class Milestone extends Model
         'project_id',
         'total_hours'
     ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['due_date', 'deleted_at', 'created_at', 'updated_at'];
-
 }

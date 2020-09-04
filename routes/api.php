@@ -21,6 +21,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResources([ 'user' => 'API\UserController' ]);
 
 Route::group([
+    'namespace' => 'API\Contacts',
+], function () {
+    Route::apiResources([ 'client' => 'ClientController' ]);
+});
+
+Route::group([
     'prefix' => 'milestones',
     'namespace' => 'API\Milestones',
     'as' => 'milestones.'

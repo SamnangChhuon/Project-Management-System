@@ -27,10 +27,10 @@ class StatusController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'status'  =>  'required|string|max:191|unique:task_status',
+            'status'  =>  'required|string|max:191|unique:task_statuses',
         ]);
 
-        return Client::create([
+        return Status::create([
             'status'  =>  $request['status']
         ]);
     }
@@ -41,9 +41,9 @@ class StatusController extends Controller
      * @param  \App\Model\Tasks\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function show(Status $status)
+    public function show($id)
     {
-        $status = Status::findOrFail($status);
+        $status = Status::findOrFail($id);
 
         return response()->json([
             'data' => $status
@@ -57,12 +57,12 @@ class StatusController extends Controller
      * @param  \App\Model\Tasks\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Status $status)
+    public function update(Request $request, $id)
     {
-        $status = Status::findOrFail($status);
+        $status = Status::findOrFail($id);
 
         $this->validate($request, [
-            'status'  =>  'required|string|max:191|unique:task_status',
+            'status'  =>  'required|string|max:191|unique:task_statuses',
         ]);
 
         $status->update($request->all());
@@ -76,12 +76,12 @@ class StatusController extends Controller
      * @param  \App\Model\Tasks\Status  $status
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Status $status)
+    public function destroy($id)
     {
-        $status = Status::findOrFail($status);
+        $status = Status::findOrFail($id);
 
         // Delete the status
-        $status->withTrashed();
+        $status->delete();
         return ['message' => 'Data Deleted'];
     }
 }

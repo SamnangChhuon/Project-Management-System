@@ -19,13 +19,6 @@ class Status extends Model
         'status'
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
-
     // public function milestones()
     // {
     //     return $this->belongsToMany('App\Model\Milestone', 'milestones', 'user_id', 'role_id');

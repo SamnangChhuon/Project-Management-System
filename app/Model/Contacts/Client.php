@@ -32,13 +32,6 @@ class Client extends Model
         'notes'
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
-
     public function contacts()
     {
         return $this->hasMany('App\Model\Contacts\Contacts', 'client_id', 'id');

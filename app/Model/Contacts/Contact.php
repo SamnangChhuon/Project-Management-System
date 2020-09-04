@@ -40,13 +40,6 @@ class Contact extends Model
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at', 'created_at', 'updated_at'];
-
     public function contact()
     {
         return $this->hasOne('App\Model\Contacts\Client', 'id', 'client_id');

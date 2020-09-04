@@ -19,23 +19,21 @@
                                     <th>Name</th>
                                     <th>Website</th>
                                     <th>Industry</th>
-                                    <th>Revenue</th>
-                                    <th>Description</th>
                                     <th>Phone</th>
-                                    <th>Country</th>
                                     <th>Registered At</th>
                                     <th>Modify</th>
                                 </tr>
-                                <tr v-for="user in users.data" :key="user.id">
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.type | upText }}</td>
-                                    <td>{{ user.created_at | myDate }}</td>
+                                <tr v-for="client in clients.data" :key="client.id">
+                                    <td>{{ client.id }}</td>
+                                    <td>{{ client.name }}</td>
+                                    <td>{{ client.website }}</td>
+                                    <td>{{ client.industry }}</td>
+                                    <td>{{ client.phone }}</td>
+                                    <td>{{ client.created_at | formatDate }}</td>
                                     <td>
-                                        <a href="#" @click="editModal(user)"><i class="fas fa-edit text-info"></i></a>
+                                        <a href="#" @click="editModal(client)"><i class="fas fa-edit text-info"></i></a>
                                         |
-                                        <a href="#" @click="deleteUsers(user.id)"><i class="fas fa-trash text-danger"></i></a>
+                                        <a href="#" @click="deleteClients(client.id)"><i class="fas fa-trash text-danger"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -43,7 +41,7 @@
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">
-                        <pagination :data="users" @pagination-change-page="getResults"></pagination>
+                        <pagination :data="clients" @pagination-change-page="getResults"></pagination>
                     </div>
                 </div>
                 <!-- /.card -->
@@ -58,50 +56,43 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New User</h5>
-                        <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update User's Info</h5>
+                        <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New Client</h5>
+                        <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Client's Info</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form @submit.prevent="editmode ? updateUser() : createUser()">
+                    <form @submit.prevent="editmode ? updateClient() : createClient()">
                         <div class="modal-body">
                             <div class="form-group">
-                                <input v-model="form.name" type="text" name="name" placeholder="Name"
+                                <label for="name">Name</label>
+                                <input v-model="form.name" type="text" name="name"
                                     class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                                 <has-error :form="form" field="name"></has-error>
                             </div>
                             <div class="form-group">
-                                <input v-model="form.email" type="email" name="email" placeholder="Email Address"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
-                                <has-error :form="form" field="email"></has-error>
+                                <label for="website">Website</label>
+                                <input v-model="form.website" type="text" name="website"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('website') }">
+                                <has-error :form="form" field="website"></has-error>
                             </div>
                             <div class="form-group">
-                                <textarea v-model="form.bio" name="bio" id="bio"  placeholder="Short bio for user (Optional)"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
-                                <has-error :form="form" field="bio"></has-error>
+                                <label for="industry">Industry</label>
+                                <input v-model="form.industry" type="text" name="industry"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('industry') }">
+                                <has-error :form="form" field="industry"></has-error>
                             </div>
                             <div class="form-group">
-                                <select name="type" v-model="form.type" id="type" class="form-control" :class="{ 'is-valid': form.errors.has('type') }">
-                                    <option value="">Select User Role</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="user">Standard User</option>
-                                    <option value="author">Author</option>
-                                </select>
-                                <has-error :form="form" field="type"></has-error>
+                                <label for="phone">Phone</label>
+                                <input v-model="form.phone" type="text" name="phone"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('phone') }">
+                                <has-error :form="form" field="phone"></has-error>
                             </div>
-                            <div class="form-group">
-                                <input v-model="form.password" type="password" name="password" id="password" placeholder="Password"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                                <has-error :form="form" field="password"></has-error>
-                            </div>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                             <button v-show="editmode" type="submit" class="btn btn-success">Update <i class="fas fa-pencil-alt fa-fw"></i></button>
                             <button v-show="!editmode" type="submit" class="btn btn-primary">Create <i class="fas fa-plus fa-fw"></i></button>
-
                         </div>
                     </form>
                 </div>
@@ -115,29 +106,27 @@
         data() {
             return {
                 editmode: false,
-                users: {},
+                clients: {},
                 form: new Form({
                     id: '',
                     name: '',
-                    email: '',
-                    password: '',
-                    type: '',
-                    bio: '',
-                    photo: ''
+                    website: '',
+                    industry: '',
+                    phone: ''
                 })
             }
         },
         methods:{
             getResults(page = 1) {
-                axios.get('api/user?page=' + page)
+                axios.get('api/client?page=' + page)
                     .then(response => {
-                        this.users = response.data;
+                        this.clients = response.data;
                     });
 		    },
-            updateUser() {
+            updateClient() {
                 this.$Progress.start();
 
-                this.form.put('api/user/' + this.form.id)
+                this.form.put('api/client/' + this.form.id)
                 .then(() => {
                     // if success
                     $('#addNew').modal('hide');
@@ -153,18 +142,18 @@
                     this.$Progress.fail();
                 });
             },
-            editModal(user) {
+            editModal(client) {
                 this.editmode = true;
                 this.form.reset(); // Reset the modal
                 $('#addNew').modal('show');
-                this.form.fill(user); // Pass the data to the modal
+                this.form.fill(client); // Pass the data to the modal
             },
             newModal() {
                 this.editmode = false;
                 this.form.reset();
                 $('#addNew').modal('show');
             },
-            deleteUsers(id) {
+            deleteClients(id) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -176,7 +165,7 @@
                 }).then((result) => {
                     // Send requesst to the server
                     if (result.value) {
-                        this.form.delete('api/user/' + id).then(() => {
+                        this.form.delete('api/client/' + id).then(() => {
                             Swal.fire(
                                 'Deleted!',
                                 'Your file has been deleted.',
@@ -189,14 +178,14 @@
                     }
                 })
             },
-            loadUsers() {
-                if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("api/user").then(({ data }) => (this.users = data));
-                }
+            loadClients() {
+                // if (this.$gate.isAdminOrAuthor()) {
+                    axios.get("api/client").then(({ data }) => (this.clients = data));
+                // }
             },
-            createUser() {
+            createClient() {
                 this.$Progress.start();
-                this.form.post('api/user')
+                this.form.post('api/client')
                 .then(() => {
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
@@ -204,7 +193,7 @@
     
                     toast.fire({
                         type: 'success',
-                        title: 'User created in successfully'
+                        title: 'Client created in successfully'
                     })
     
                     this.$Progress.finish();
@@ -218,21 +207,11 @@
             }
         },
         created() {
-            Fire.$on('searching', () => {
-                let query = this.$parent.search;
-                axios.get('api/findUser?q=' + query)
-                .then((data) => {
-                    this.users = data.data;
-                })
-                .catch(() => {
-                    
-                })
-            })
-            this.loadUsers();
+            this.loadClients();
             Fire.$on('AfterCreate', () => {
-                this.loadUsers();
+                this.loadClients();
             }); // using event AfterCreate
-            // setInterval(() => this.loadUsers(), 3000);
+            // setInterval(() => this.loadClients(), 3000);
         }
     }
 </script>
