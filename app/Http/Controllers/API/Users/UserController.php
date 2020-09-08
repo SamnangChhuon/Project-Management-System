@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Users;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Users\UserResource;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,7 +12,7 @@ class UserController extends Controller
 {
     /**
      * Create a new controller instance
-     * 
+     *
      * @return void
      */
     public function __construct()
@@ -27,9 +28,9 @@ class UserController extends Controller
     public function index()
     {
         // $this->authorize('isAdmin');
-        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return User::latest()->paginate(10);
-        }
+        // if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+            return UserResource::collection(User::latest()->paginate(10));
+        // }
     }
 
     /**
@@ -49,7 +50,7 @@ class UserController extends Controller
         return User::create([
             'name'  =>  $request['name'],
             'email'  =>  $request['email'],
-            'type'  =>  $request['type'],
+            'role_id'  =>  $request['role_id'],
             'bio'  =>  $request['bio'],
             'photo'  =>  $request['photo'],
             'password'  =>  Hash::make($request['password']),
@@ -154,5 +155,13 @@ class UserController extends Controller
             $users = User::latest()->paginate(10);
         }
         return $users;
+    }
+
+    public function getUserByType($role_id) {
+        $user = User::where('role', $role_id)->get();
+
+        return response()->json([
+            'data' => $user
+        ]);
     }
 }

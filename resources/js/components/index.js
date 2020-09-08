@@ -9,6 +9,11 @@ import Vue from 'vue'
  */
 
 Vue.component(
+    'content-header',
+    require('./ui/ContentHeader.vue').default
+);
+
+Vue.component(
     'ui-navbar',
     require('./ui/Navbar.vue').default
 );

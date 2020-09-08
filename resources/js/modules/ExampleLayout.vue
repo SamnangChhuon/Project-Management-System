@@ -1,6 +1,8 @@
 <template>
     <div class="content-wrapper">
+
         <content-header  page-title="Users Management" page-name="Users Management"></content-header>
+
         <div class="content">
             <div class="container-fluid">
                 <!-- <div class="row" v-if="$gate.isAdminOrAuthor()"> -->
@@ -34,7 +36,7 @@
                                             <td>{{ user.email }}</td>
                                             <td>{{ user.role.name }}</td>
                                             <td>{{ user.bio }}</td>
-                                            <td><img :src="getImage(user.photo)" class="img-fluid" style="width: 25px;"></td>
+                                            <td>{{ user.photo }}</td>
                                             <td>{{ user.created_at | formatDate }}</td>
                                             <td>
                                                 <a href="#" @click="editModal(user)"><i class="fas fa-edit text-info"></i></a>
@@ -71,34 +73,34 @@
                             <form @submit.prevent="editmode ? updateUser() : createUser()">
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="name">Name <span class="text-danger">*</span></label>
-                                        <input v-model="form.name" type="text" name="name" class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
+                                        <input v-model="form.name" type="text" name="name" placeholder="Name"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                                         <has-error :form="form" field="name"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Email Address <span class="text-danger">*</span></label>
-                                        <input v-model="form.email" type="email" name="email"
+                                        <input v-model="form.email" type="email" name="email" placeholder="Email Address"
                                             class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
                                         <has-error :form="form" field="email"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="bio">Bio (Optional)</label>
-                                        <textarea v-model="form.bio" name="bio" id="bio"  placeholder="Short bio for user"
+                                        <textarea v-model="form.bio" name="bio" id="bio"  placeholder="Short bio for user (Optional)"
                                             class="form-control" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
                                         <has-error :form="form" field="bio"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="role_id">Role</label>
                                         <select name="role_id" v-model="form.role_id" id="role_id" class="form-control" :class="{ 'is-valid': form.errors.has('role_id') }">
+                                            <option value="">Select User Role</option>
                                             <option v-for="role in roles" :value="role.id" :key="role.id">
                                                 {{ role.name }}
                                             </option>
+                                            <!-- <option value="admin">Admin</option>
+                                            <option value="user">Standard User</option>
+                                            <option value="author">Author</option> -->
                                         </select>
                                         <has-error :form="form" field="role_id"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Password <span class="text-danger">*</span></label>
-                                        <input v-model="form.password" type="password" name="password" id="password"
+                                        <input v-model="form.password" type="password" name="password" id="password" placeholder="Password"
                                             class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
                                         <has-error :form="form" field="password"></has-error>
                                     </div>
@@ -138,14 +140,10 @@
             }
         },
         methods:{
-            getImage(image) {
-                console.log(image);
-                return (image != null) ? 'img/'+image : 'img/profile/default.png';
-            },
-            getAllUserRole() {
-                axios.get('api/users/role')
+            getUserRole() {
+                axios.get('api/user/role?user_id=' + page)
                     .then(response => {
-                        this.roles = response.data;
+                        this.users = response.data;
                     });
             },
             getResults(page = 1) {
@@ -249,7 +247,6 @@
                 })
             })
             this.loadUsers();
-            this.getAllUserRole();
             Fire.$on('AfterCreate', () => {
                 this.loadUsers();
             }); // using event AfterCreate

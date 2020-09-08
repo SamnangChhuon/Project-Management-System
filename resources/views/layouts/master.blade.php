@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>PMS | RG</title>
-    
+
     <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png" sizes="16x16">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
@@ -55,7 +55,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                        <img src="{{ asset('dist/img/user1-128x128.jpg') }}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                             Brad Diesel
@@ -71,7 +71,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                        <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <img src="{{ asset('dist/img/user8-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                             John Pierce
@@ -87,7 +87,7 @@
                     <a href="#" class="dropdown-item">
                         <!-- Message Start -->
                         <div class="media">
-                        <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                        <img src="{{ asset('dist/img/user3-128x128.jpg') }}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                             Nora Silvester
@@ -122,35 +122,9 @@
         <ui-sidebar :user="{{ Auth::user() }}"></ui-sidebar>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0 text-dark"></h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Starter Page</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
+        <router-view></router-view>
 
-            <!-- Main content -->
-            <div class="content">
-                <div class="container-fluid">
-                    <router-view></router-view>
-                    
-                    <vue-progress-bar></vue-progress-bar>
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content -->
-        </div>
+        <vue-progress-bar></vue-progress-bar>
         <!-- /.content-wrapper -->
 
         <!-- Main Footer -->

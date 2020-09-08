@@ -18,7 +18,12 @@ let routes = [
     {
         path: '/clients',
         name: 'ClientsPage',
-        component: require('./modules/clients/Index.vue').default
+        component: require('./modules/clients/Index.vue').default,
+    },
+    {
+        path: '/client-details/:clientId',
+        name: 'ClientDetailsPage',
+        components: require('./modules/clients/details/Index.vue')
     },
     {
         path: '/contacts',

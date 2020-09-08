@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Projects Table</h3>
+                        <h3 class="card-title">Projects</h3>
 
                         <div class="card-tools">
                             <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
@@ -15,21 +15,17 @@
                         <table class="table table-hover">
                             <tbody>
                                 <tr>
-                                    <th>Project ID</th>
-                                    <th>Active</th>
+                                    <th>ID</th>
                                     <th>Project Name</th>
-                                    <th>Status ID</th>
                                     <th>Project Manager ID</th>
                                     <th>Hourly Rate</th>
-                                    <th>Budget</th>
+                                    <th>Budeget</th>
                                     <th>Registered At</th>
                                     <th>Modify</th>
                                 </tr>
                                 <tr v-for="project in projects.data" :key="project.id">
                                     <td>{{ project.id }}</td>
-                                    <td>{{ project.active }}</td>
                                     <td>{{ project.project_name }}</td>
-                                    <td>{{ project.status_id }}</td>
                                     <td>{{ project.project_manager_id }}</td>
                                     <td>{{ project.hourly_rate }}</td>
                                     <td>{{ project.budget }}</td>
@@ -48,7 +44,51 @@
                         <pagination :data="projects" @pagination-change-page="getResults"></pagination>
                     </div>
                 </div>
-                <!-- /.card -->
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Contacts</h3>
+
+                        <div class="card-tools">
+                            <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Occupation</th>
+                                    <th>Phone</th>
+                                    <th>Registered At</th>
+                                    <th>Modify</th>
+                                </tr>
+                                <tr v-for="contact in contacts.data" :key="contact.id">
+                                    <td>{{ contact.id }}</td>
+                                    <td>{{ contact.first_name }}</td>
+                                    <td>{{ contact.last_name }}</td>
+                                    <td>{{ contact.email }}</td>
+                                    <td>{{ contact.occupation }}</td>
+                                    <td>{{ contact.phone }}</td>
+                                    <td>{{ contact.created_at | formatDate }}</td>
+                                    <td>
+                                        <a href="#" @click="editModal(contact)"><i class="fas fa-edit text-info"></i></a>
+                                        |
+                                        <a href="#" @click="deleteProjects(contact.id)"><i class="fas fa-trash text-danger"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <pagination :data="contacts" @pagination-change-page="getResults"></pagination>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -69,57 +109,34 @@
                     <form @submit.prevent="editmode ? updateProject() : createProject()">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="client_id">Client ID</label>
-                                <input v-model="form.client_id" type="text" name="client_id"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('client_id') }">
-                                <has-error :form="form" field="client_id"></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="active">Active</label>
-                                <select v-model="form.active" name="active" class="form-control" :class="{ 'is-invalid': form.errors.has('active') }">
-                                    <option value="true">Active</option>
-                                    <option value="false">InActive</option>
-                                </select>
-                                <has-error :form="form" field="active"></has-error>
-                            </div>
-                            <div class="form-group">
                                 <label for="project_name">Project Name</label>
-                                <input v-model="form.project_name" type="text" name="project_name"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('project_name') }">
+                                <input v-model="form.project_name" type="text" name="project_name" class="form-control" :class="{ 'is-invalid': form.errors.has('project_name') }">
                                 <has-error :form="form" field="project_name"></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="status_id">Status ID</label>
-                                <select v-model="form.status_id" name="status_id" class="form-control" :class="{ 'is-invalid': form.errors.has('status_id') }">
-                                    <option value="1">Sale</option>
-                                    <option value="2">R & D</option>
-                                    <option value="3">Production</option>
-                                    <option value="4">Pending Approval</option>
-                                    <option value="5">Complete</option>
-                                </select>
-                                <has-error :form="form" field="status_id"></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="project_manager_id">Project Manager ID</label>
-                                <select v-model="form.project_manager_id" name="project_manager_id" class="form-control" :class="{ 'is-invalid': form.errors.has('project_manager_id') }">
-                                    <option value="1">Tom Cage</option>
-                                    <option value="2">Johnny Black</option>
-                                    <option value="3">Joe Blow</option>
-                                    <option value="4">Luke Sky</option>
+                                <label for="project_manager_id">Project Manager</label>
+                                <select v-model="form.project_manager_id" id="" class="form-control" name="project_manager_id" :class="{ 'is-invalid': form.errors.has('project_manager_id') }">
+
                                 </select>
                                 <has-error :form="form" field="project_manager_id"></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="hourly_rate">Hourly Rate</label>
-                                <input v-model="form.hourly_rate" type="text" name="hourly_rate"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('hourly_rate') }">
-                                <has-error :form="form" field="hourly_rate"></has-error>
+                                <label for="website">Website</label>
+                                <input v-model="form.website" type="text" name="website"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('website') }">
+                                <has-error :form="form" field="website"></has-error>
                             </div>
                             <div class="form-group">
-                                <label for="budget">Budget</label>
-                                <input v-model="form.budget" type="text" name="budget"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('budget') }">
-                                <has-error :form="form" field="budget"></has-error>
+                                <label for="industry">Industry</label>
+                                <input v-model="form.industry" type="text" name="industry"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('industry') }">
+                                <has-error :form="form" field="industry"></has-error>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input v-model="form.phone" type="text" name="phone"
+                                    class="form-control" :class="{ 'is-invalid': form.errors.has('phone') }">
+                                <has-error :form="form" field="phone"></has-error>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -140,21 +157,27 @@
             return {
                 editmode: false,
                 projects: {},
+                contacts: {},
+                users: {},
                 form: new Form({
                     id: '',
-                    client_id: '',
-                    active: '',
                     project_name: '',
-                    status_id: '',
                     project_manager_id: '',
                     hourly_rate: '',
-                    budget: ''
+                    budget: '',
+                    created_at: ''
                 })
             }
         },
         methods:{
+            getProjectManager(role_id) {
+                axios.get('api/users/' + role_id)
+                    .then(response => {
+                        this.projects = response.data;
+                    });
+            },
             getResults(page = 1) {
-                axios.get('api/projects?page=' + page)
+                axios.get('api/project?page=' + page)
                     .then(response => {
                         this.projects = response.data;
                     });
@@ -162,7 +185,7 @@
             updateProject() {
                 this.$Progress.start();
 
-                this.form.put('api/projects/' + this.form.id)
+                this.form.put('api/project/' + this.form.id)
                 .then(() => {
                     // if success
                     $('#addNew').modal('hide');
@@ -201,7 +224,7 @@
                 }).then((result) => {
                     // Send requesst to the server
                     if (result.value) {
-                        this.form.delete('api/projects/' + id).then(() => {
+                        this.form.delete('api/project/' + id).then(() => {
                             Swal.fire(
                                 'Deleted!',
                                 'Your file has been deleted.',
@@ -216,12 +239,12 @@
             },
             loadProjects() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("api/projects").then(({ data }) => (this.projects = data));
+                    axios.get("api/project").then(({ data }) => (this.projects = data));
                 // }
             },
             createProject() {
                 this.$Progress.start();
-                this.form.post('api/projects')
+                this.form.post('api/project')
                 .then(() => {
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
@@ -244,6 +267,7 @@
         },
         created() {
             this.loadProjects();
+            this.getProjectManager(1);
             Fire.$on('AfterCreate', () => {
                 this.loadProjects();
             }); // using event AfterCreate

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API\Projects;
+namespace App\Http\Controllers\API\Users;
 
-use App\Model\Projects\Project;
+use App\Model\Users\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ProjectController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return Project::latest()->paginate(10);
+        return Role::get();
     }
 
     /**
@@ -26,22 +26,24 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->validate($request, [
-        //     'status'  =>  'required|string|max:191|unique:project_statuses',
-        // ]);
+        $this->validate($request, [
+            'name'  =>  'required|string|max:191|unique:project_statuses',
+        ]);
 
-        return Project::create($request->all());
+        return Role::create([
+            'name'  =>  $request['name']
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Projects\Project  $project
+     * @param  \App\Model\Projects\Role  $status
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(Role $status)
     {
-        $status = Project::findOrFail($status);
+        $status = Role::findOrFail($status);
 
         return response()->json([
             'data' => $status
@@ -52,16 +54,16 @@ class ProjectController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Projects\Project  $project
+     * @param  \App\Model\Projects\Role  $status
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $status = Project::findOrFail($id);
+        $status = Role::findOrFail($id);
 
-        // $this->validate($request, [
-        //     'status'  =>  'required|string|max:191|unique:project_statuses',
-        // ]);
+        $this->validate($request, [
+            'name'  =>  'required|string|max:191|unique:project_statuses',
+        ]);
 
         $status->update($request->all());
 
@@ -71,12 +73,12 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Projects\Project  $project
+     * @param  \App\Model\Projects\Role  $status
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $status = Project::findOrFail($id);
+        $status = Role::findOrFail($id);
 
         // Delete the status
         $status->delete();

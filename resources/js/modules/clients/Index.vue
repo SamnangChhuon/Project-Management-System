@@ -1,100 +1,105 @@
 <template>
-    <div class="clients">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Clients Table</h3>
+    <div class="content-wrapper">
+        <content-header  page-title="Clients Management" page-name="Clients Management"></content-header>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Clients Table</h3>
 
-                        <div class="card-tools">
-                            <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
+                                <div class="card-tools">
+                                    <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Website</th>
+                                            <th>Industry</th>
+                                            <th>Phone</th>
+                                            <th>Registered At</th>
+                                            <th>Modify</th>
+                                        </tr>
+                                        <tr v-for="client in clients.data" :key="client.id">
+                                            <td>{{ client.id }}</td>
+                                            <td><router-link :to="{ name: 'ClientDetailsPage', params: { clientId: client.id }}">{{ client.name }}</router-link></td>
+                                            <td>{{ client.website }}</td>
+                                            <td>{{ client.industry }}</td>
+                                            <td>{{ client.phone }}</td>
+                                            <td>{{ client.created_at | formatDate }}</td>
+                                            <td>
+                                                <a href="#" @click="editModal(client)"><i class="fas fa-edit text-info"></i></a>
+                                                |
+                                                <a href="#" @click="deleteClients(client.id)"><i class="fas fa-trash text-danger"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <pagination :data="clients" @pagination-change-page="getResults"></pagination>
+                            </div>
                         </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Website</th>
-                                    <th>Industry</th>
-                                    <th>Phone</th>
-                                    <th>Registered At</th>
-                                    <th>Modify</th>
-                                </tr>
-                                <tr v-for="client in clients.data" :key="client.id">
-                                    <td>{{ client.id }}</td>
-                                    <td>{{ client.name }}</td>
-                                    <td>{{ client.website }}</td>
-                                    <td>{{ client.industry }}</td>
-                                    <td>{{ client.phone }}</td>
-                                    <td>{{ client.created_at | formatDate }}</td>
-                                    <td>
-                                        <a href="#" @click="editModal(client)"><i class="fas fa-edit text-info"></i></a>
-                                        |
-                                        <a href="#" @click="deleteClients(client.id)"><i class="fas fa-trash text-danger"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                        <pagination :data="clients" @pagination-change-page="getResults"></pagination>
+                        <!-- /.card -->
                     </div>
                 </div>
-                <!-- /.card -->
-            </div>
-        </div>
 
-        <!-- <div v-if="!$gate.isAdminOrAuthor()">
-            <not-found></not-found>
-        </div> -->
+                <!-- <div v-if="!$gate.isAdminOrAuthor()">
+                    <not-found></not-found>
+                </div> -->
 
-        <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New Client</h5>
-                        <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Client's Info</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
+                <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New Client</h5>
+                                <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Client's Info</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form @submit.prevent="editmode ? updateClient() : createClient()">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input v-model="form.name" type="text" name="name"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
+                                        <has-error :form="form" field="name"></has-error>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="website">Website</label>
+                                        <input v-model="form.website" type="text" name="website"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('website') }">
+                                        <has-error :form="form" field="website"></has-error>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="industry">Industry</label>
+                                        <input v-model="form.industry" type="text" name="industry"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('industry') }">
+                                        <has-error :form="form" field="industry"></has-error>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input v-model="form.phone" type="text" name="phone"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('phone') }">
+                                        <has-error :form="form" field="phone"></has-error>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button v-show="editmode" type="submit" class="btn btn-success">Update <i class="fas fa-pencil-alt fa-fw"></i></button>
+                                    <button v-show="!editmode" type="submit" class="btn btn-primary">Create <i class="fas fa-plus fa-fw"></i></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <form @submit.prevent="editmode ? updateClient() : createClient()">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input v-model="form.name" type="text" name="name"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
-                                <has-error :form="form" field="name"></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="website">Website</label>
-                                <input v-model="form.website" type="text" name="website"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('website') }">
-                                <has-error :form="form" field="website"></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="industry">Industry</label>
-                                <input v-model="form.industry" type="text" name="industry"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('industry') }">
-                                <has-error :form="form" field="industry"></has-error>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input v-model="form.phone" type="text" name="phone"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('phone') }">
-                                <has-error :form="form" field="phone"></has-error>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button v-show="editmode" type="submit" class="btn btn-success">Update <i class="fas fa-pencil-alt fa-fw"></i></button>
-                            <button v-show="!editmode" type="submit" class="btn btn-primary">Create <i class="fas fa-plus fa-fw"></i></button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -190,19 +195,19 @@
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
                     $('#addNew').modal('hide');
-    
+
                     toast.fire({
                         type: 'success',
                         title: 'Client created in successfully'
                     })
-    
+
                     this.$Progress.finish();
 
                 })
                 .catch(() => {
                     // If not success
                     this.$Progress.fail();
-                    
+
                 });
             }
         },

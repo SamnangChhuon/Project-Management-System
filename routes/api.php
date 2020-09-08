@@ -18,7 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResources([ 'user' => 'API\UserController' ]);
+Route::apiResources([ 'user' => 'API\Users\UserController' ]);
+Route::apiResources([ 'users/role' => 'API\Users\RoleController' ]);
+Route::get('/users/{role_id}', 'API\UserController@getUserByType');
 
 Route::group([
     'namespace' => 'API\Contacts',
@@ -47,6 +49,7 @@ Route::group([
     'namespace' => 'API\Projects',
     'as' => 'projects.'
 ], function () {
+    Route::apiResources([ '' => 'ProjectController' ]);
     Route::apiResources([ 'status' => 'StatusController' ]);
 });
 
