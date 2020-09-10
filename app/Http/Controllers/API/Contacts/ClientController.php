@@ -56,13 +56,13 @@ class ClientController extends Controller
      * @param  \App\Model\Contacts\Clients  $clients
      * @return \Illuminate\Http\Response
      */
-    public function show(Client $client)
+    public function show($id)
     {
-        $client = Client::findOrFail($client);
+        $client = Client::findOrFail($id);
 
         return response()->json([
             'data' => $client
-            ]);
+        ]);
     }
 
     /**

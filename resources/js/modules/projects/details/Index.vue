@@ -1,16 +1,19 @@
 <template>
     <div class="content-wrapper">
-        <content-header  page-title="Clients" page-name="Clients"></content-header>
+
+        <content-header  page-title="Users Management" page-name="Users Management"></content-header>
+
         <div class="content">
             <div class="container-fluid">
+                <!-- <div class="row" v-if="$gate.isAdminOrAuthor()"> -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Clients Table</h3>
+                                <h3 class="card-title">Users Table</h3>
 
                                 <div class="card-tools">
-                                    <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
+                                    <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-user-plus fa-fw"></i></button>
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -20,23 +23,25 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            <th>Website</th>
-                                            <th>Industry</th>
-                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Bio</th>
+                                            <th>Photo</th>
                                             <th>Registered At</th>
                                             <th>Modify</th>
                                         </tr>
-                                        <tr v-for="client in clients.data" :key="client.id">
-                                            <td>{{ client.id }}</td>
-                                            <td><router-link :to="{ name: 'ClientDetailsPage', params: { clientId: client.id }}">{{ client.name }}</router-link></td>
-                                            <td>{{ client.website }}</td>
-                                            <td>{{ client.industry }}</td>
-                                            <td>{{ client.phone }}</td>
-                                            <td>{{ client.created_at | formatDate }}</td>
+                                        <tr v-for="user in users.data" :key="user.id">
+                                            <td>{{ user.id }}</td>
+                                            <td>{{ user.name }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.role.name }}</td>
+                                            <td>{{ user.bio }}</td>
+                                            <td>{{ user.photo }}</td>
+                                            <td>{{ user.created_at | formatDate }}</td>
                                             <td>
-                                                <a href="#" @click="editModal(client)"><i class="fas fa-edit text-info"></i></a>
+                                                <a href="#" @click="editModal(user)"><i class="fas fa-edit text-info"></i></a>
                                                 |
-                                                <a href="#" @click="deleteClients(client.id)"><i class="fas fa-trash text-danger"></i></a>
+                                                <a href="#" @click="deleteUsers(user.id)"><i class="fas fa-trash text-danger"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -44,7 +49,7 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
-                                <pagination :data="clients" @pagination-change-page="getResults"></pagination>
+                                <pagination :data="users" @pagination-change-page="getResults"></pagination>
                             </div>
                         </div>
                         <!-- /.card -->
@@ -59,43 +64,53 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New Client</h5>
-                                <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Client's Info</h5>
+                                <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New User</h5>
+                                <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update User's Info</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmode ? updateClient() : createClient()">
+                            <form @submit.prevent="editmode ? updateUser() : createUser()">
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input v-model="form.name" type="text" name="name"
+                                        <input v-model="form.name" type="text" name="name" placeholder="Name"
                                             class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
                                         <has-error :form="form" field="name"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="website">Website</label>
-                                        <input v-model="form.website" type="text" name="website"
-                                            class="form-control" :class="{ 'is-invalid': form.errors.has('website') }">
-                                        <has-error :form="form" field="website"></has-error>
+                                        <input v-model="form.email" type="email" name="email" placeholder="Email Address"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
+                                        <has-error :form="form" field="email"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="industry">Industry</label>
-                                        <input v-model="form.industry" type="text" name="industry"
-                                            class="form-control" :class="{ 'is-invalid': form.errors.has('industry') }">
-                                        <has-error :form="form" field="industry"></has-error>
+                                        <textarea v-model="form.bio" name="bio" id="bio"  placeholder="Short bio for user (Optional)"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
+                                        <has-error :form="form" field="bio"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="phone">Phone</label>
-                                        <input v-model="form.phone" type="text" name="phone"
-                                            class="form-control" :class="{ 'is-invalid': form.errors.has('phone') }">
-                                        <has-error :form="form" field="phone"></has-error>
+                                        <select name="role_id" v-model="form.role_id" id="role_id" class="form-control" :class="{ 'is-valid': form.errors.has('role_id') }">
+                                            <option value="">Select User Role</option>
+                                            <option v-for="role in roles" :value="role.id" :key="role.id">
+                                                {{ role.name }}
+                                            </option>
+                                            <!-- <option value="admin">Admin</option>
+                                            <option value="user">Standard User</option>
+                                            <option value="author">Author</option> -->
+                                        </select>
+                                        <has-error :form="form" field="role_id"></has-error>
                                     </div>
+                                    <div class="form-group">
+                                        <input v-model="form.password" type="password" name="password" id="password" placeholder="Password"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
+                                        <has-error :form="form" field="password"></has-error>
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                     <button v-show="editmode" type="submit" class="btn btn-success">Update <i class="fas fa-pencil-alt fa-fw"></i></button>
                                     <button v-show="!editmode" type="submit" class="btn btn-primary">Create <i class="fas fa-plus fa-fw"></i></button>
+
                                 </div>
                             </form>
                         </div>
@@ -111,27 +126,36 @@
         data() {
             return {
                 editmode: false,
-                clients: {},
+                users: {},
+                roles: {},
                 form: new Form({
                     id: '',
                     name: '',
-                    website: '',
-                    industry: '',
-                    phone: ''
+                    email: '',
+                    password: '',
+                    role_id: '',
+                    bio: '',
+                    photo: ''
                 })
             }
         },
         methods:{
-            getResults(page = 1) {
-                axios.get('api/client?page=' + page)
+            getUserRole() {
+                axios.get('api/user/role?user_id=' + page)
                     .then(response => {
-                        this.clients = response.data;
+                        this.users = response.data;
+                    });
+            },
+            getResults(page = 1) {
+                axios.get('api/user?page=' + page)
+                    .then(response => {
+                        this.users = response.data;
                     });
 		    },
-            updateClient() {
+            updateUser() {
                 this.$Progress.start();
 
-                this.form.put('api/client/' + this.form.id)
+                this.form.put('api/user/' + this.form.id)
                 .then(() => {
                     // if success
                     $('#addNew').modal('hide');
@@ -147,18 +171,18 @@
                     this.$Progress.fail();
                 });
             },
-            editModal(client) {
+            editModal(user) {
                 this.editmode = true;
                 this.form.reset(); // Reset the modal
                 $('#addNew').modal('show');
-                this.form.fill(client); // Pass the data to the modal
+                this.form.fill(user); // Pass the data to the modal
             },
             newModal() {
                 this.editmode = false;
                 this.form.reset();
                 $('#addNew').modal('show');
             },
-            deleteClients(id) {
+            deleteUsers(id) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -170,7 +194,7 @@
                 }).then((result) => {
                     // Send requesst to the server
                     if (result.value) {
-                        this.form.delete('api/client/' + id).then(() => {
+                        this.form.delete('api/user/' + id).then(() => {
                             Swal.fire(
                                 'Deleted!',
                                 'Your file has been deleted.',
@@ -183,14 +207,14 @@
                     }
                 })
             },
-            loadClients() {
+            loadUsers() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("api/client").then(({ data }) => (this.clients = data));
+                    axios.get("api/user").then(({ data }) => (this.users = data));
                 // }
             },
-            createClient() {
+            createUser() {
                 this.$Progress.start();
-                this.form.post('api/client')
+                this.form.post('api/user')
                 .then(() => {
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
@@ -198,7 +222,7 @@
 
                     toast.fire({
                         type: 'success',
-                        title: 'Client created in successfully'
+                        title: 'User created in successfully'
                     })
 
                     this.$Progress.finish();
@@ -212,11 +236,21 @@
             }
         },
         created() {
-            this.loadClients();
+            Fire.$on('searching', () => {
+                let query = this.$parent.search;
+                axios.get('api/findUser?q=' + query)
+                .then((data) => {
+                    this.users = data.data;
+                })
+                .catch(() => {
+
+                })
+            })
+            this.loadUsers();
             Fire.$on('AfterCreate', () => {
-                this.loadClients();
+                this.loadUsers();
             }); // using event AfterCreate
-            // setInterval(() => this.loadClients(), 3000);
+            // setInterval(() => this.loadUsers(), 3000);
         }
     }
 </script>

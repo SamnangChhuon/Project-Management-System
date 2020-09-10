@@ -18,42 +18,48 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResources([ 'user' => 'API\Users\UserController' ]);
-Route::apiResources([ 'users/role' => 'API\Users\RoleController' ]);
-Route::get('/users/{role_id}', 'API\UserController@getUserByType');
+Route::group([
+    'namespace' => 'API\Users',
+    'as' => 'users.'
+], function () {
+    Route::get('users/profile', 'UserController@profile');
+    Route::get('users/findUser', 'UserController@search');
+    Route::put('users/profile', 'UserController@updateProfile');
+
+    Route::get('users/manager', 'UserController@getUserManager');
+
+    Route::apiResources([ 'users' => 'UserController' ]);
+    Route::apiResources([ 'users/role' => 'RoleController' ]);
+});
 
 Route::group([
     'namespace' => 'API\Contacts',
 ], function () {
     Route::apiResources([ 'client' => 'ClientController' ]);
+    Route::apiResources([ 'contacts' => 'ContactController' ]);
 });
 
 Route::group([
-    'prefix' => 'milestones',
     'namespace' => 'API\Milestones',
     'as' => 'milestones.'
 ], function () {
-    Route::apiResources([ 'status' => 'StatusController' ]);
+    Route::apiResources([ 'milestones/status' => 'StatusController' ]);
 });
 
 Route::group([
-    'prefix' => 'tasks',
     'namespace' => 'API\Tasks',
     'as' => 'tasks.'
 ], function () {
-    Route::apiResources([ 'status' => 'StatusController' ]);
+    Route::apiResources([ 'tasks/status' => 'StatusController' ]);
 });
 
 Route::group([
-    'prefix' => 'projects',
     'namespace' => 'API\Projects',
     'as' => 'projects.'
 ], function () {
-    Route::apiResources([ '' => 'ProjectController' ]);
-    Route::apiResources([ 'status' => 'StatusController' ]);
+    Route::apiResources([ 'projects' => 'ProjectController' ]);
+    Route::apiResources([ 'projects/status' => 'StatusController' ]);
 });
 
-Route::get('profile', 'API\UserController@profile');
-Route::get('findUser', 'API\UserController@search');
-Route::put('profile', 'API\UserController@updateProfile');
+
 

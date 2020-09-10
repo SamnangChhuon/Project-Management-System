@@ -41,6 +41,11 @@ let routes = [
         component: require('./modules/projects/Index.vue').default
     },
     {
+        path: '/project-details/:projectId',
+        name: 'ProjectDetailsPage',
+        component: require('./modules/projects/details/Index.vue')
+    },
+    {
         path: '/tasks',
         name: 'TasksPage',
         component: require('./modules/tasks/Index.vue').default

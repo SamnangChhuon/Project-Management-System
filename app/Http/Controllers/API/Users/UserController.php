@@ -157,11 +157,10 @@ class UserController extends Controller
         return $users;
     }
 
-    public function getUserByType($role_id) {
-        $user = User::where('role', $role_id)->get();
-
+    public function getUserManager() {
+        $data = User::where('role_id', 1)->select('id', 'name')->get();
         return response()->json([
-            'data' => $user
+            'data' => $data
         ]);
     }
 }

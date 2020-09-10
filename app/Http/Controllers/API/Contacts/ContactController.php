@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Contacts;
 use App\Model\Contacts\Contact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Contacts\ContactResource;
 
 class ContactController extends Controller
 {
@@ -15,7 +16,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return Contact::latest()->paginate(10);
+        return ContactResource::collection(Contact::latest()->paginate(10));
     }
 
     /**

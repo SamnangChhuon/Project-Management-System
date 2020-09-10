@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Projects;
 use App\Model\Projects\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Projects\ProjectResource;
 
 class ProjectController extends Controller
 {
@@ -13,9 +14,10 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Project::latest()->paginate(10);
+        $clientId = $request->input('clientId');
+        return ProjectResource::collection(Project::where('client_id', $clientId)->latest()->paginate(10));
     }
 
     /**
@@ -26,9 +28,10 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->validate($request, [
-        //     'status'  =>  'required|string|max:191|unique:project_statuses',
-        // ]);
+        $this->validate($request, [
+            'project_name'  =>  'required|string|max:191',
+            'project_manager_id'  =>  'required',
+        ]);
 
         return Project::create($request->all());
     }
@@ -39,12 +42,12 @@ class ProjectController extends Controller
      * @param  \App\Model\Projects\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        $status = Project::findOrFail($status);
+        $project = Project::findOrFail($id);
 
         return response()->json([
-            'data' => $status
+            'data' => $project
         ]);
     }
 
@@ -57,13 +60,14 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $status = Project::findOrFail($id);
+        $project = Project::findOrFail($id);
 
-        // $this->validate($request, [
-        //     'status'  =>  'required|string|max:191|unique:project_statuses',
-        // ]);
+        $this->validate($request, [
+            'project_name'  =>  'required|string|max:191',
+            'project_manager_id'  =>  'required',
+        ]);
 
-        $status->update($request->all());
+        $project->update($request->all());
 
         return response()->json(['message' => __('messages.update_success')]);
     }
@@ -76,10 +80,10 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        $status = Project::findOrFail($id);
+        $project = Project::findOrFail($id);
 
-        // Delete the status
-        $status->delete();
+        // Delete the project
+        $project->delete();
         return ['message' => 'Data Deleted'];
     }
 }
