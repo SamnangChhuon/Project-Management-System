@@ -234,20 +234,15 @@
                 client: []
             }
         },
-        computed: {
+        methods:{
             fetchClientData() {
                 axios.get('/api/client/' + this.$route.params.clientId)
                     .then(response => {
                         this.client = response.data.data;
                     });
             },
-        },
-        methods:{
             getClientName() {
-                if (this.client.name != null) {
-                    return 'Client Details - ' + this.client.name;
-                }
-                return 'Client Details - ';
+                return 'Client Details - ' + this.client.name;
             },
             getProjects(page = 1) {
                 axios.get('/api/projects?page=' + page)
@@ -363,6 +358,7 @@
             }
         },
         created() {
+            this.fetchClientData();
             this.loadProjects();
             this.loadContacts();
             this.loadUsersManager();

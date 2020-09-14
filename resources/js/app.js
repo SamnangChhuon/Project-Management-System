@@ -27,6 +27,13 @@ const toast = Swal.mixin({
 });
 window.toast = toast;
 
+import VueProgressBar from 'vue-progressbar';
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+});
+
 
 window.Form = Form;
 Vue.component(HasError.name, HasError)

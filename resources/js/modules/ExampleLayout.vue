@@ -1,7 +1,7 @@
 <template>
     <div class="content-wrapper">
 
-        <content-header  page-title="Users Management" page-name="Users Management"></content-header>
+        <content-header page-title="Users Management" page-name="Users Management"></content-header>
 
         <div class="content">
             <div class="container-fluid">

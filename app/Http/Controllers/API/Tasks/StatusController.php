@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Tasks;
 use App\Model\Tasks\Status;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Tasks\StatusResource;
 
 class StatusController extends Controller
 {
@@ -83,5 +84,9 @@ class StatusController extends Controller
         // Delete the status
         $status->delete();
         return ['message' => 'Data Deleted'];
+    }
+
+    public function getTaskStatuses() {
+        return StatusResource::collection(Status::all());
     }
 }

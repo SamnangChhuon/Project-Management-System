@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API\Milestones;
 
-use App\Model\Milestones\Status;
+use App\Model\Milestones\Hour;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Milestones\StatusResource;
+use App\Http\Resources\Milestones\HourResource as MilestonesHourResource;
 
-class StatusController extends Controller
+class HourController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class StatusController extends Controller
      */
     public function index()
     {
-        return Status::latest()->paginate(10);
+        return MilestonesHourResource::collection(Hour::latest()->paginate(10));
     }
 
     /**
@@ -28,26 +28,33 @@ class StatusController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'status'  =>  'required|string|max:191|unique:milestone_statuses',
+            'date'  =>  'required',
+            'task_id'  =>  'required',
+            'employee_id'  =>  'required'
         ]);
 
-        return Status::create([
-            'status'  =>  $request['status']
+        return Hour::create([
+            'date'  =>  $request['date'],
+            'time'  =>  $request['time'],
+            'work_completed'  =>  $request['work_completed'],
+            'task_id'  =>  $request['task_id'],
+            'project_id'  =>  $request['project_id'],
+            'employee_id'  =>  $request['employee_id'],
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Milestones\Status  $status
+     * @param  \App\Model\Hours\Hour  $hour
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $status = Status::findOrFail($id);
+        $hour = Hour::findOrFail($id);
 
         return response()->json([
-            'data' => $status
+            'data' => $hour
         ]);
     }
 
@@ -55,18 +62,20 @@ class StatusController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Milestones\Status  $status
+     * @param  \App\Model\Hours\Hour  $hour
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $status = Status::findOrFail($id);
+        $hour = Hour::findOrFail($id);
 
         $this->validate($request, [
-            'status'  =>  'required|string|max:191|unique:milestone_statuses',
+            'date'  =>  'required',
+            'task_id'  =>  'required',
+            'employee_id'  =>  'required'
         ]);
 
-        $status->update($request->all());
+        $hour->update($request->all());
 
         return response()->json(['message' => __('messages.update_success')]);
     }
@@ -74,19 +83,15 @@ class StatusController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Milestones\Status  $status
+     * @param  \App\Model\Hours\Hour  $hour
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $status = Status::findOrFail($id);
+        $hour = Hour::findOrFail($id);
 
-        // Delete the status
-        $status->delete();
+        // Delete the hour
+        $hour->delete();
         return ['message' => 'Data Deleted'];
-    }
-
-    public function getStatus() {
-        return StatusResource::collection(Status::all());
     }
 }

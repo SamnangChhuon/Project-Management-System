@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Milestones;
 use App\Model\Milestones\Milestone;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Milestones\MilestoneResource;
 
 class MilestoneController extends Controller
 {
@@ -15,7 +16,7 @@ class MilestoneController extends Controller
      */
     public function index()
     {
-        //
+        return MilestoneResource::collection(Milestone::latest()->paginate(10));
     }
 
     /**
@@ -26,7 +27,19 @@ class MilestoneController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name'  =>  'required|string|max:191',
+            'status_id'  =>  'required',
+        ]);
+
+        return Milestone::create([
+            'name'  =>  $request['name'],
+            'due_date'  =>  $request['due_date'],
+            'deliverables'  =>  $request['deliverables'],
+            'status_id'  =>  $request['status_id'],
+            'project_id'  =>  $request['project_id'],
+            'total_hours'  =>  $request['total_hours'],
+        ]);
     }
 
     /**
@@ -35,9 +48,13 @@ class MilestoneController extends Controller
      * @param  \App\Model\Milestones\Milestone  $milestone
      * @return \Illuminate\Http\Response
      */
-    public function show(Milestone $milestone)
+    public function show($id)
     {
-        //
+        $milestone = Milestone::findOrFail($id);
+
+        return response()->json([
+            'data' => $milestone
+        ]);
     }
 
     /**
@@ -47,9 +64,18 @@ class MilestoneController extends Controller
      * @param  \App\Model\Milestones\Milestone  $milestone
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Milestone $milestone)
+    public function update(Request $request, $id)
     {
-        //
+        $milestone = Milestone::findOrFail($id);
+
+        $this->validate($request, [
+            'name'  =>  'required|string|max:191',
+            'status_id'  =>  'required',
+        ]);
+
+        $milestone->update($request->all());
+
+        return response()->json(['message' => __('messages.update_success')]);
     }
 
     /**
@@ -58,8 +84,12 @@ class MilestoneController extends Controller
      * @param  \App\Model\Milestones\Milestone  $milestone
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Milestone $milestone)
+    public function destroy($id)
     {
-        //
+        $milestone = Milestone::findOrFail($id);
+
+        // Delete the milestone
+        $milestone->delete();
+        return ['message' => 'Data Deleted'];
     }
 }

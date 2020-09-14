@@ -1,13 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueProgressBar from 'vue-progressbar';
 
 Vue.use(VueRouter)
-Vue.use(VueProgressBar, {
-    color: 'rgb(143, 255, 199)',
-    failedColor: 'red',
-    height: '3px'
-});
 
 let routes = [
     {
@@ -43,7 +37,7 @@ let routes = [
     {
         path: '/project-details/:projectId',
         name: 'ProjectDetailsPage',
-        component: require('./modules/projects/details/Index.vue')
+        component: require('./modules/projects/details/Index.vue').default
     },
     {
         path: '/tasks',

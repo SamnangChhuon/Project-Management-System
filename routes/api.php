@@ -43,13 +43,21 @@ Route::group([
     'namespace' => 'API\Milestones',
     'as' => 'milestones.'
 ], function () {
-    Route::apiResources([ 'milestones/status' => 'StatusController' ]);
+    Route::get('/milestones/getMilestoneStatus', 'StatusController@getStatus')->name('getMilestoneStatus');
+
+    Route::apiResources([ '/milestones-costs' => 'CostController' ]);
+    Route::apiResources([ '/milestones-hours' => 'HourController' ]);
+    Route::apiResources([ '/milestones-statuses' => 'StatusController' ]);
+    Route::apiResources([ '/milestones' => 'MilestoneController' ]);
 });
 
 Route::group([
     'namespace' => 'API\Tasks',
     'as' => 'tasks.'
 ], function () {
+    Route::get('tasks/getTaskStatuses', 'StatusController@getTaskStatuses');
+
+    Route::apiResources([ 'tasks' => 'TaskController' ]);
     Route::apiResources([ 'tasks/status' => 'StatusController' ]);
 });
 

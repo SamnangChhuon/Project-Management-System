@@ -5,11 +5,11 @@ namespace App\Model\Milestones;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Milestone extends Model
+class Hour extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'milestones';
+    protected $table = 'milestone_hours';
 
     /**
      * The attributes that are mass assignable.
@@ -17,12 +17,11 @@ class Milestone extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'due_date',
-        'deliverables',
-        'status_id',
+        'date',
+        'time',
+        'work_completed',
+        'task_id',
         'project_id',
-        'total_hours'
+        'employee_id'
     ];
-
 }
