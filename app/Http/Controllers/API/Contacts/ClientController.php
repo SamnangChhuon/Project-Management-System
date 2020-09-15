@@ -102,4 +102,11 @@ class ClientController extends Controller
         $client->withTrashed();
         return ['message' => 'User Deleted'];
     }
+
+    public function getClients() {
+        $data = Client::select('id', 'name')->get();
+        return response()->json([
+            'data' => $data
+        ]);
+    }
 }

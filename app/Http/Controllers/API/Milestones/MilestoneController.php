@@ -14,8 +14,11 @@ class MilestoneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($projectId = $request->input('projectId')) {
+            return MilestoneResource::collection(Milestone::where('project_id', $projectId)->latest()->paginate(10));
+        }
         return MilestoneResource::collection(Milestone::latest()->paginate(10));
     }
 

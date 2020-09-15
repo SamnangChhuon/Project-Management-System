@@ -16,8 +16,13 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $clientId = $request->input('clientId');
-        return ProjectResource::collection(Project::where('client_id', $clientId)->latest()->paginate(10));
+        if ($clientId = $request->input('clientId')) {
+            return ProjectResource::collection(Project::where('client_id', $clientId)->latest()->paginate(10));
+        }
+        if ($request->input('getType') == 'all') {
+            return ProjectResource::collection(Project::all());
+        }
+        return ProjectResource::collection(Project::latest()->paginate(10));
     }
 
     /**
@@ -30,6 +35,8 @@ class ProjectController extends Controller
     {
         $this->validate($request, [
             'project_name'  =>  'required|string|max:191',
+            'client_id'  =>  'required',
+            'status_id'  =>  'required',
             'project_manager_id'  =>  'required',
         ]);
 
@@ -64,6 +71,8 @@ class ProjectController extends Controller
 
         $this->validate($request, [
             'project_name'  =>  'required|string|max:191',
+            'client_id'  =>  'required',
+            'status_id'  =>  'required',
             'project_manager_id'  =>  'required',
         ]);
 

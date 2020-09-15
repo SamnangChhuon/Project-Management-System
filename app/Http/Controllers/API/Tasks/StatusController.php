@@ -14,8 +14,11 @@ class StatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->input('getType') == 'all') {
+            return StatusResource::collection(Status::all());
+        }
         return Status::latest()->paginate(10);
     }
 
@@ -84,9 +87,5 @@ class StatusController extends Controller
         // Delete the status
         $status->delete();
         return ['message' => 'Data Deleted'];
-    }
-
-    public function getTaskStatuses() {
-        return StatusResource::collection(Status::all());
     }
 }

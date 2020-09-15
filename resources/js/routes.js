@@ -50,8 +50,8 @@ let routes = [
         component: require('./modules/users/managements/Users.vue').default
     },
     {
-        path: '/users',
-        name: 'UsersPage',
+        path: '/user/profile',
+        name: 'UserProfilePage',
         component: require('./modules/users/Profile.vue').default
     },
 

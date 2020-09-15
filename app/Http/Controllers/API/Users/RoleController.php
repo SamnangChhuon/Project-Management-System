@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Users;
 use App\Model\Users\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Users\RoleResource;
 
 class RoleController extends Controller
 {
@@ -13,9 +14,12 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Role::get();
+        if ($request->input('getType') == 'all') {
+            return RoleResource::collection(Role::all());
+        }
+        return RoleResource::collection(Role::latest()->paginate(10));
     }
 
     /**

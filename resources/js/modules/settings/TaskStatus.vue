@@ -1,75 +1,82 @@
 <template>
-    <div class="clients">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Task Status Table</h3>
+    <div class="content-wrapper">
 
-                        <div class="card-tools">
-                            <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
-                        </div>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Status</th>
-                                    <th>Registered At</th>
-                                    <th>Modify</th>
-                                </tr>
-                                <tr v-for="value in statuses.data" :key="value.id">
-                                    <td>{{ value.id }}</td>
-                                    <td>{{ value.status }}</td>
-                                    <td>{{ value.created_at | formatDate }}</td>
-                                    <td>
-                                        <a href="#" @click="editModal(value)"><i class="fas fa-edit text-info"></i></a>
-                                        |
-                                        <a href="#" @click="deleteStatus(value.id)"><i class="fas fa-trash text-danger"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                        <pagination :data="statuses" @pagination-change-page="getResults"></pagination>
-                    </div>
-                </div>
-                <!-- /.card -->
-            </div>
-        </div>
+        <content-header page-title="Task Statuses" page-name="Task Statuses"></content-header>
 
-        <!-- <div v-if="!$gate.isAdminOrAuthor()">
-            <not-found></not-found>
-        </div> -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Task Status Table</h3>
 
-        <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New</h5>
-                        <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Data</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form @submit.prevent="editmode ? updateData() : createData()">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <input v-model="form.status" type="text" name="status" placeholder="Status"
-                                    class="form-control" :class="{ 'is-invalid': form.errors.has('status') }">
-                                <has-error :form="form" field="status"></has-error>
+                                <div class="card-tools">
+                                    <button class="btn btn-success" @click="newModal()">Add New <i class="fas fa-plus fa-fw"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Status</th>
+                                            <th>Registered At</th>
+                                            <th>Modify</th>
+                                        </tr>
+                                        <tr v-for="value in statuses.data" :key="value.id">
+                                            <td>{{ value.id }}</td>
+                                            <td>{{ value.status }}</td>
+                                            <td>{{ value.created_at | formatDate }}</td>
+                                            <td>
+                                                <a href="#" @click="editModal(value)"><i class="fas fa-edit text-info"></i></a>
+                                                |
+                                                <a href="#" @click="deleteStatus(value.id)"><i class="fas fa-trash text-danger"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <pagination :data="statuses" @pagination-change-page="getResults"></pagination>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button v-show="editmode" type="submit" class="btn btn-success">Update <i class="fas fa-pencil-alt fa-fw"></i></button>
-                            <button v-show="!editmode" type="submit" class="btn btn-primary">Create <i class="fas fa-plus fa-fw"></i></button>
+                        <!-- /.card -->
+                    </div>
+                </div>
+
+                <!-- <div v-if="!$gate.isAdminOrAuthor()">
+                    <not-found></not-found>
+                </div> -->
+
+                <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="addNewLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New</h5>
+                                <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form @submit.prevent="editmode ? updateData() : createData()" autocomplete="off">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input v-model="form.status" type="text" name="status" placeholder="Status"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.has('status') }">
+                                        <has-error :form="form" field="status"></has-error>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button v-show="editmode" type="submit" class="btn btn-success">Update <i class="fas fa-pencil-alt fa-fw"></i></button>
+                                    <button v-show="!editmode" type="submit" class="btn btn-primary">Create <i class="fas fa-plus fa-fw"></i></button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,7 +97,7 @@
         },
         methods:{
             getResults(page = 1) {
-                axios.get('api/tasks/status?page=' + page)
+                axios.get('/api/tasks/statuses?page=' + page)
                     .then(response => {
                         this.statuses = response.data;
                     });
@@ -98,7 +105,7 @@
             updateData() {
                 this.$Progress.start();
 
-                this.form.put('api/tasks/status/' + this.form.id)
+                this.form.put('/api/tasks/statuses/' + this.form.id)
                 .then(() => {
                     // if success
                     $('#addNew').modal('hide');
@@ -137,7 +144,7 @@
                 }).then((result) => {
                     // Send requesst to the server
                     if (result.value) {
-                        this.form.delete('api/tasks/status/' + id).then(() => {
+                        this.form.delete('/api/tasks/statuses/' + id).then(() => {
                             Swal.fire(
                                 'Deleted!',
                                 'Your file has been deleted.',
@@ -153,46 +160,35 @@
             loadData() {
                 // if (this.$gate.isAdminOrAuthor()) {
                 //     }
-                    axios.get("api/tasks/status").then(({ data }) => (this.statuses = data));
+                    axios.get("/api/tasks/statuses").then(({ data }) => (this.statuses = data));
             },
             createData() {
                 this.$Progress.start();
-                this.form.post('api/tasks/status')
+                this.form.post('/api/tasks/statuses')
                 .then(() => {
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
                     $('#addNew').modal('hide');
-    
                     toast.fire({
                         type: 'success',
                         title: 'Status created in successfully'
                     })
-    
                     this.$Progress.finish();
-
                 })
                 .catch(() => {
                     // If not success
                     this.$Progress.fail();
-                    
                 });
             }
         },
         created() {
-            // Fire.$on('searching', () => {
-            //     let query = this.$parent.search;
-            //     axios.get('api/tasks/findStatus?q=' + query)
-            //     .then((data) => {
-            //         this.statuses = data.data;
-            //     })
-            //     .catch(() => {
-                    
-            //     })
-            // })
+            this.$Progress.start();
             this.loadData();
             Fire.$on('AfterCreate', () => {
+                this.$Progress.start();
                 this.loadData();
             }); // using event AfterCreate
+            this.$Progress.finish();
             // setInterval(() => this.loadData(), 3000);
         }
     }

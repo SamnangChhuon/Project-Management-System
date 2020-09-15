@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Projects;
 use App\Model\Projects\Status;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Projects\StatusResource;
 
 class StatusController extends Controller
 {
@@ -83,5 +84,9 @@ class StatusController extends Controller
         // Delete the status
         $status->delete();
         return ['message' => 'Data Deleted'];
+    }
+
+    public function getStatus() {
+        return StatusResource::collection(Status::all());
     }
 }

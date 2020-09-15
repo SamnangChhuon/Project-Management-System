@@ -14,8 +14,11 @@ class HourController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($projectId = $request->input('projectId')) {
+            return MilestonesHourResource::collection(Hour::where('project_id', $projectId)->latest()->paginate(10));
+        }
         return MilestonesHourResource::collection(Hour::latest()->paginate(10));
     }
 

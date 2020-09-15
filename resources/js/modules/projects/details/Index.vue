@@ -204,7 +204,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmodeMilestone ? updateMilestone() : createMilestone()">
+                            <form @submit.prevent="editmodeMilestone ? updateMilestone() : createMilestone()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="name">Name <span class="text-danger">*</span></label>
@@ -256,11 +256,11 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmodeTask ? updateTask() : createTask()">
+                            <form @submit.prevent="editmodeTask ? updateTask() : createTask()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="employee_id">Employee <span class="text-danger">*</span></label>
-                                        <select name="employee_id" v-model="formTask.employee_id" id="employee_id" class="form-control" :class="{ 'is-valid': formTask.errors.has('employee_id') }">
+                                        <select name="employee_id" v-model="formTask.employee_id" class="form-control" :class="{ 'is-valid': formTask.errors.has('employee_id') }">
                                             <option v-for="employee in employees" :value="employee.id" :key="employee.id">
                                                 {{ employee.name }}
                                             </option>
@@ -321,7 +321,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmodeHour ? updateHour() : createHour()">
+                            <form @submit.prevent="editmodeHour ? updateHour() : createHour()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="date">Date <span class="text-danger">*</span></label>
@@ -349,7 +349,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="employee_id">Employee <span class="text-danger">*</span></label>
-                                        <select name="employee_id" v-model="formHour.employee_id" id="employee_id" class="form-control" :class="{ 'is-valid': formHour.errors.has('employee_id') }">
+                                        <select name="employee_id" v-model="formHour.employee_id" class="form-control" :class="{ 'is-valid': formHour.errors.has('employee_id') }">
                                             <option v-for="employee in employees" :value="employee.id" :key="employee.id">
                                                 {{ employee.name }}
                                             </option>
@@ -377,7 +377,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmodeCost ? updateCost() : createCost()">
+                            <form @submit.prevent="editmodeCost ? updateCost() : createCost()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="name">Name <span class="text-danger">*</span></label>
@@ -426,8 +426,8 @@
                     due_date: '',
                     deliverables: '',
                     status_id: '',
-                    project_id: '',
-                    total_hours: ''
+                    total_hours: '',
+                    project_id: this.$route.params.projectId
                 }),
 
 
@@ -440,7 +440,7 @@
                     total_hours: '',
                     status_id: '',
                     milestone_id: '',
-                    project_id: '',
+                    project_id: this.$route.params.projectId,
                     employee_id: ''
                 }),
 
@@ -453,7 +453,7 @@
                     time: '',
                     work_completed: '',
                     task_id: '',
-                    project_id: '',
+                    project_id: this.$route.params.projectId,
                     employee_id: ''
                 }),
 
@@ -466,7 +466,7 @@
                     price_per: '',
                     quantity: '',
                     total_cost: '',
-                    project_id: '',
+                    project_id: this.$route.params.projectId,
                     milesone_id: ''
                 }),
 
@@ -533,7 +533,6 @@
 
             updateMilestone() {
                 this.$Progress.start();
-                this.formMilestone.project_id = this.$route.params.projectId;
                 this.formMilestone.put('/api/milestones/' + this.formMilestone.id)
                 .then(() => {
                     // if success
@@ -552,7 +551,6 @@
             },
             updateTask() {
                 this.$Progress.start();
-                this.formTask.project_id = this.$route.params.projectId;
                 this.formTask.put('/api/tasks/' + this.formTask.id)
                 .then(() => {
                     // if success
@@ -571,7 +569,6 @@
             },
             updateHour() {
                 this.$Progress.start();
-                this.formHour.project_id = this.$route.params.projectId;
                 this.formHour.put('/api/milestones-hours/' + this.formHour.id)
                 .then(() => {
                     // if success
@@ -590,7 +587,6 @@
             },
             updateCost() {
                 this.$Progress.start();
-                this.formCost.project_id = this.$route.params.projectId;
                 this.formCost.put('/api/milestones-costs/' + this.formCost.id)
                 .then(() => {
                     // if success
@@ -757,28 +753,28 @@
 
             loadMilestones() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("/api/milestones").then(({ data }) => (this.milestones = data));
+                    axios.get("/api/milestones?projectId=" + this.$route.params.projectId).then(({ data }) => (this.milestones = data));
+
                 // }
             },
             loadTasks() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("/api/tasks").then(({ data }) => (this.tasks = data));
+                    axios.get("/api/tasks?projectId=" + this.$route.params.projectId).then(({ data }) => (this.tasks = data));
                 // }
             },
             loadHours() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("/api/milestones-hours").then(({ data }) => (this.hours = data));
+                    axios.get("/api/milestones-hours?projectId=" + this.$route.params.projectId).then(({ data }) => (this.hours = data));
                 // }
             },
             loadCosts() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("/api/milestones-costs").then(({ data }) => (this.costs = data));
+                    axios.get("/api/milestones-costs?projectId=" + this.$route.params.projectId).then(({ data }) => (this.costs = data));
                 // }
             },
 
             createMilestone() {
                 this.$Progress.start();
-                this.formMilestone.project_id = this.$route.params.projectId;
                 this.formMilestone.post('/api/milestones')
                 .then(() => {
                     // If Insert Success
@@ -797,7 +793,6 @@
             },
             createTask() {
                 this.$Progress.start();
-                this.formTask.project_id = this.$route.params.projectId;
                 this.formTask.post('/api/tasks')
                 .then(() => {
                     // If Insert Success
@@ -816,7 +811,6 @@
             },
             createHour() {
                 this.$Progress.start();
-                this.formHour.project_id = this.$route.params.projectId;
                 this.formHour.post('/api/milestones-hours')
                 .then(() => {
                     // If Insert Success
@@ -835,7 +829,6 @@
             },
             createCost() {
                 this.$Progress.start();
-                this.formCost.project_id = this.$route.params.projectId;
                 this.formCost.post('/api/milestones-costs')
                 .then(() => {
                     // If Insert Success
@@ -855,17 +848,7 @@
 
         },
         created() {
-            // Fire.$on('searching', () => {
-            //     let query = this.$parent.search;
-            //     axios.get('api/findUser?q=' + query)
-            //     .then((data) => {
-            //         this.users = data.data;
-            //     })
-            //     .catch(() => {
-
-            //     })
-            // })
-            // this.getUserRole();
+            this.$Progress.start();
             this.fetchProjectData();
             this.getMilestoneStatuses();
             this.getTaskStatuses();
@@ -876,11 +859,13 @@
             this.loadHours();
             this.loadCosts();
             Fire.$on('AfterCreate', () => {
+                this.$Progress.start();
                 this.loadMilestones();
                 this.loadTasks();
                 this.loadHours();
                 this.loadCosts();
             }); // using event AfterCreate
+            this.$Progress.finish();
             // setInterval(() => this.loadUsers(), 3000);
         }
     }

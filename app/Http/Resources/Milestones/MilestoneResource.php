@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources\Milestones;
 
+use App\Http\Resources\Projects\ProjectResource;
 use App\Model\Milestones\Status;
+use App\Model\Projects\Project;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MilestoneResource extends JsonResource
@@ -23,6 +25,7 @@ class MilestoneResource extends JsonResource
             'status_id' => $this->status_id,
             'status' => new StatusResource(Status::find($this->status_id)),
             'project_id' => $this->project_id,
+            'project' => new ProjectResource(Project::find($this->project_id)),
             'total_hours' => $this->total_hours,
             'created_at' => $this->created_at,
         ];

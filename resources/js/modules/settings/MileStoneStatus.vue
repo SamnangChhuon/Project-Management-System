@@ -61,7 +61,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmode ? updateData() : createData()">
+                            <form @submit.prevent="editmode ? updateData() : createData()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <input v-model="form.status" type="text" name="status" placeholder="Status"
@@ -169,37 +169,26 @@
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
                     $('#addNew').modal('hide');
-
                     toast.fire({
                         type: 'success',
                         title: 'Status created in successfully'
                     })
-
                     this.$Progress.finish();
-
                 })
                 .catch(() => {
                     // If not success
                     this.$Progress.fail();
-
                 });
             }
         },
         created() {
-            // Fire.$on('searching', () => {
-            //     let query = this.$parent.search;
-            //     axios.get('api/milestones/findStatus?q=' + query)
-            //     .then((data) => {
-            //         this.statuses = data.data;
-            //     })
-            //     .catch(() => {
-
-            //     })
-            // })
+            this.$Progress.start();
             this.loadData();
             Fire.$on('AfterCreate', () => {
+                this.$Progress.start();
                 this.loadData();
             }); // using event AfterCreate
+            this.$Progress.finish();
             // setInterval(() => this.loadData(), 3000);
         }
     }

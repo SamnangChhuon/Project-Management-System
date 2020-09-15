@@ -22,20 +22,22 @@ Route::group([
     'namespace' => 'API\Users',
     'as' => 'users.'
 ], function () {
-    Route::get('users/profile', 'UserController@profile');
-    Route::get('users/findUser', 'UserController@search');
-    Route::put('users/profile', 'UserController@updateProfile');
+    Route::get('/users/profile', 'UserController@profile');
+    Route::get('/users/findUser', 'UserController@search');
+    Route::put('/users/profile', 'UserController@updateProfile');
 
-    Route::get('users/manager', 'UserController@getUserManager');
+    Route::get('/users/manager', 'UserController@getUserManager');
 
-    Route::apiResources([ 'users' => 'UserController' ]);
-    Route::apiResources([ 'users/role' => 'RoleController' ]);
+    Route::apiResources([ '/users/roles' => 'RoleController' ]);
+    Route::apiResources([ '/users' => 'UserController' ]);
 });
 
 Route::group([
     'namespace' => 'API\Contacts',
 ], function () {
-    Route::apiResources([ 'client' => 'ClientController' ]);
+    Route::get('/clients/getClients', 'ClientController@getClients');
+
+    Route::apiResources([ 'clients' => 'ClientController' ]);
     Route::apiResources([ 'contacts' => 'ContactController' ]);
 });
 
@@ -55,18 +57,18 @@ Route::group([
     'namespace' => 'API\Tasks',
     'as' => 'tasks.'
 ], function () {
-    Route::get('tasks/getTaskStatuses', 'StatusController@getTaskStatuses');
-
-    Route::apiResources([ 'tasks' => 'TaskController' ]);
-    Route::apiResources([ 'tasks/status' => 'StatusController' ]);
+    Route::apiResources([ '/tasks/statuses' => 'StatusController' ]);
+    Route::apiResources([ '/tasks' => 'TaskController' ]);
 });
 
 Route::group([
     'namespace' => 'API\Projects',
     'as' => 'projects.'
 ], function () {
-    Route::apiResources([ 'projects' => 'ProjectController' ]);
-    Route::apiResources([ 'projects/status' => 'StatusController' ]);
+    Route::get('/projects/getStatus', 'StatusController@getStatus');
+
+    Route::apiResources([ '/projects/statuses' => 'StatusController' ]);
+    Route::apiResources([ '/projects' => 'ProjectController' ]);
 });
 
 

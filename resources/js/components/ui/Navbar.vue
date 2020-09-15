@@ -9,22 +9,19 @@
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="/" class="nav-link">Home</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Contact</a>
-            </li>
         </ul>
 
         <!-- SEARCH FORM -->
-        <div class="form-inline ml-3">
-            <div class="input-group input-group-sm">
+        <!-- <div class="form-inline ml-3"> -->
+            <!-- <div class="input-group input-group-sm"> -->
                 <!-- <input class="form-control form-control-navbar" @keyup="searchit" v-model="search" type="search" placeholder="Search" aria-label="Search"> -->
-                <div class="input-group-append">
+                <!-- <div class="input-group-append"> -->
                 <!-- <button class="btn btn-navbar" @click="searchit">
                     <i class="fa fa-search"></i>
                 </button> -->
-                </div>
-            </div>
-        </div>
+                <!-- </div> -->
+            <!-- </div> -->
+        <!-- </div> -->
 
             <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
@@ -104,6 +101,6 @@
 
 <script>
 export default {
-    
+
 }
 </script>

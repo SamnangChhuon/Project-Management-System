@@ -65,7 +65,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmode ? updateClient() : createClient()">
+                            <form @submit.prevent="editmode ? updateClient() : createClient()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="name">Name</label>
@@ -123,7 +123,7 @@
         },
         methods:{
             getResults(page = 1) {
-                axios.get('api/client?page=' + page)
+                axios.get('api/clients?page=' + page)
                     .then(response => {
                         this.clients = response.data;
                     });
@@ -131,7 +131,7 @@
             updateClient() {
                 this.$Progress.start();
 
-                this.form.put('api/client/' + this.form.id)
+                this.form.put('api/clients/' + this.form.id)
                 .then(() => {
                     // if success
                     $('#addNew').modal('hide');
@@ -170,7 +170,7 @@
                 }).then((result) => {
                     // Send requesst to the server
                     if (result.value) {
-                        this.form.delete('api/client/' + id).then(() => {
+                        this.form.delete('api/clients/' + id).then(() => {
                             Swal.fire(
                                 'Deleted!',
                                 'Your file has been deleted.',
@@ -185,37 +185,36 @@
             },
             loadClients() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("api/client").then(({ data }) => (this.clients = data));
+                    axios.get("api/clients").then(({ data }) => (this.clients = data));
                 // }
             },
             createClient() {
                 this.$Progress.start();
-                this.form.post('api/client')
+                this.form.post('api/clients')
                 .then(() => {
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
                     $('#addNew').modal('hide');
-
                     toast.fire({
                         type: 'success',
                         title: 'Client created in successfully'
                     })
-
                     this.$Progress.finish();
-
                 })
                 .catch(() => {
                     // If not success
                     this.$Progress.fail();
-
                 });
             }
         },
         created() {
+            this.$Progress.start();
             this.loadClients();
             Fire.$on('AfterCreate', () => {
+                this.$Progress.start();
                 this.loadClients();
             }); // using event AfterCreate
+            this.$Progress.finish();
             // setInterval(() => this.loadClients(), 3000);
         }
     }

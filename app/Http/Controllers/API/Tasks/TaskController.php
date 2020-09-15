@@ -14,8 +14,17 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($milestoneId = $request->input('milestoneId')) {
+            return TaskResource::collection(Task::where('milestone_id', $milestoneId)->latest()->paginate(10));
+        }
+        if ($projectId = $request->input('projectId')) {
+            return TaskResource::collection(Task::where('project_id', $projectId)->latest()->paginate(10));
+        }
+        if ($employeeId = $request->input('employeeId')) {
+            return TaskResource::collection(Task::where('employee_id', $employeeId)->latest()->paginate(10));
+        }
         return TaskResource::collection(Task::latest()->paginate(10));
     }
 

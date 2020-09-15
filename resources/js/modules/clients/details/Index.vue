@@ -109,7 +109,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmodeProject ? updateProject() : createProject()">
+                            <form @submit.prevent="editmodeProject ? updateProject() : createProject()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="project_name">Project Name <span class="text-danger">*</span></label>
@@ -158,20 +158,20 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form @submit.prevent="editmodeContact ? updateContact() : createContact()">
+                            <form @submit.prevent="editmodeContact ? updateContact() : createContact()" autocomplete="off">
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="first_name">First Name</label>
+                                        <label for="first_name">First Name <span class="text-danger">*</span></label>
                                         <input v-model="formContact.first_name" type="text" name="first_name" class="form-control" :class="{ 'is-invalid': formContact.errors.has('first_name') }">
                                         <has-error :form="formContact" field="first_name"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="last_name">Last Name</label>
+                                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
                                         <input v-model="formContact.last_name" type="text" name="last_name" class="form-control" :class="{ 'is-invalid': formContact.errors.has('last_name') }">
                                         <has-error :form="formContact" field="last_name"></has-error>
                                     </div>
                                     <div class="form-group">
-                                        <label for="email">Email Address</label>
+                                        <label for="email">Email Address <span class="text-danger">*</span></label>
                                         <input v-model="formContact.email" type="email" name="email" class="form-control" :class="{ 'is-invalid': formContact.errors.has('email') }">
                                         <has-error :form="formContact" field="email"></has-error>
                                     </div>
@@ -214,6 +214,7 @@
                     project_manager_id: '',
                     hourly_rate: '',
                     budget: '',
+                    status_id: '1',
                     created_at: '',
                     client_id: this.$route.params.clientId,
                 }),
@@ -227,7 +228,8 @@
                     email: '',
                     occupation: '',
                     phone: '',
-                    created_at: ''
+                    created_at: '',
+                    client_id: this.$route.params.clientId,
                 }),
 
                 users: {},
@@ -236,7 +238,7 @@
         },
         methods:{
             fetchClientData() {
-                axios.get('/api/client/' + this.$route.params.clientId)
+                axios.get('/api/clients/' + this.$route.params.clientId)
                     .then(response => {
                         this.client = response.data.data;
                     });
@@ -263,6 +265,25 @@
                 .then(() => {
                     // if success
                     $('#addNewProject').modal('hide');
+                    Swal.fire(
+                        'Updated!',
+                        'Information has been updated.',
+                        'success'
+                    )
+                    this.$Progress.finish();
+                    Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
+                })
+                .catch(() => {
+                    this.$Progress.fail();
+                });
+            },
+            updateContact() {
+                this.$Progress.start();
+
+                this.formContact.put('/api/contacts/' + this.formContact.id)
+                .then(() => {
+                    // if success
+                    $('#addNewContact').modal('hide');
                     Swal.fire(
                         'Updated!',
                         'Information has been updated.',
@@ -322,6 +343,31 @@
                     }
                 })
             },
+            deleteContacts(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    // Send requesst to the server
+                    if (result.value) {
+                        this.formContact.delete('/api/contacts/' + id).then(() => {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                            Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
+                        }).catch(() => {
+                            Swal.fire("Failed!", "There was something wrong.", "warning");
+                        });
+                    }
+                })
+            },
             loadProjects() {
                 // if (this.$gate.isAdminOrAuthor()) {
                     axios.get("/api/projects?clientId=" + this.$route.params.clientId).then(({ data }) => (this.projects = data));
@@ -329,7 +375,7 @@
             },
             loadContacts() {
                 // if (this.$gate.isAdminOrAuthor()) {
-                    axios.get("/api/contacts").then(({ data }) => (this.contacts = data));
+                    axios.get("/api/contacts?clientId=" + this.$route.params.clientId).then(({ data }) => (this.contacts = data));
                 // }
             },
             loadUsersManager() {
@@ -344,7 +390,24 @@
                     // If Insert Success
                     Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
                     $('#addNewProject').modal('hide');
-
+                    toast.fire({
+                        type: 'success',
+                        title: 'Information created in successfully'
+                    })
+                    this.$Progress.finish();
+                })
+                .catch(() => {
+                    // If not success
+                    this.$Progress.fail();
+                });
+            },
+            createContact() {
+                this.$Progress.start();
+                this.formContact.post('/api/contacts')
+                .then(() => {
+                    // If Insert Success
+                    Fire.$emit('AfterCreate'); // Register new event "AfterCreate"
+                    $('#addNewContact').modal('hide');
                     toast.fire({
                         type: 'success',
                         title: 'Information created in successfully'
@@ -358,14 +421,17 @@
             }
         },
         created() {
+            this.$Progress.start();
             this.fetchClientData();
             this.loadProjects();
             this.loadContacts();
             this.loadUsersManager();
             Fire.$on('AfterCreate', () => {
+                this.$Progress.start();
                 this.loadProjects();
                 this.loadContacts();
             }); // using event AfterCreate
+            this.$Progress.finish();
             // setInterval(() => this.loadProjects(), 3000);
         }
     }

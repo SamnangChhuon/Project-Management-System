@@ -14,8 +14,11 @@ class CostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($projectId = $request->input('projectId')) {
+            return MilestonesCostResource::collection(Cost::where('project_id', $projectId)->latest()->paginate(10));
+        }
         return MilestonesCostResource::collection(Cost::latest()->paginate(10));
     }
 
