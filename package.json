@@ -18,7 +18,7 @@
         "lodash": "^4.17.20",
         "popper.js": "^1.16.1",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.26.10",
+        "sass": "^1.26.11",
         "sass-loader": "^7.3.1",
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.12"
@@ -26,9 +26,14 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.14.0",
         "admin-lte": "^3.0.5",
+        "daterangepicker": "^3.1.0",
+        "jquery-ui": "^1.12.1",
         "laravel-vue-pagination": "^2.3.1",
-        "moment": "^2.28.0",
+        "moment": "^2.29.0",
+        "overlayscrollbars": "^1.13.0",
         "sweetalert2": "^8.19.0",
+        "tempusdominus-bootstrap-4": "^5.1.2",
+        "tempusdominus-core": "^5.0.3",
         "vform": "^1.0.1",
         "vue-progressbar": "^0.7.5",
         "vue-router": "^3.4.3"

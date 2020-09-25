@@ -19,6 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group([
+    'namespace' => 'API'
+], function () {
+    Route::get('/dasbhoard/data', 'MainController@dashboardData');
+});
+
+Route::group([
     'namespace' => 'API\Users',
     'as' => 'users.'
 ], function () {

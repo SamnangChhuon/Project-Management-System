@@ -34,12 +34,12 @@
                         <p>Clients</p>
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <router-link :to="{name: 'ContactsPage'}" class="nav-link">
                         <i class="nav-icon fas fa-address-book"></i>
                         <p>Contacts</p>
                     </router-link>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <router-link :to="{name: 'MilestonesPage'}" class="nav-link">
                         <i class="nav-icon fas fa-map-marked-alt"></i>

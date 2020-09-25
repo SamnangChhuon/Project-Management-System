@@ -1,0 +1,11 @@
+require('admin-lte/plugins/jquery/jquery.slim')
+require('admin-lte/plugins/jquery-ui/jquery-ui')
+$.widget.bridge('uibutton', $.ui.button)
+require('admin-lte/plugins/bootstrap/js/bootstrap.bundle')
+// require('admin-lte/plugins/moment/locale/en-gb')
+// require('admin-lte/plugins/moment/moment-with-locales')
+global.moment = require('moment');
+require('admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4')
+require('admin-lte/plugins/daterangepicker/daterangepicker')
+require('admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars')
+require('admin-lte/dist/js/adminlte')
