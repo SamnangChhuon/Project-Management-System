@@ -27,7 +27,7 @@
         "@fortawesome/fontawesome-free": "^5.14.0",
         "admin-lte": "^3.0.5",
         "daterangepicker": "^3.1.0",
-        "jquery-ui": "^1.12.1",
+        "jquery-ui": "^1.13.0",
         "laravel-vue-pagination": "^2.3.1",
         "moment": "^2.29.0",
         "overlayscrollbars": "^1.13.0",
