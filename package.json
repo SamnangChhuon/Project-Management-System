@@ -29,7 +29,7 @@
         "daterangepicker": "^3.1.0",
         "jquery-ui": "^1.12.1",
         "laravel-vue-pagination": "^2.3.1",
-        "moment": "^2.29.0",
+        "moment": "^2.29.2",
         "overlayscrollbars": "^1.13.0",
         "sweetalert2": "^8.19.0",
         "tempusdominus-bootstrap-4": "^5.1.2",
